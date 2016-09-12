@@ -1,0 +1,24 @@
+{% extends "base.html" %} <!-- This line includes this html into the base template -->
+{% block content %} <!-- starting the block to insert into base.html -->
+<!--{% if n == 1 %}  this is jinja code for handling and if statement in html with python
+    n equals 1
+{% else %}
+    n does not equal 1
+{% endif %}-->
+<!-- the following is a for statement in jinja writing an html list -->
+<ol>
+    {% for x in range(1, n+1) %}
+        <li>
+        {% if x%3 == 0 and x%5 == 0 %}
+            FizzBuzz
+        {% elif x%3 == 0 %}
+            Fizz
+        {% elif x%5 == 0 %}
+            Buzz
+        {% else %}
+            {{x}}
+        {% endif %}
+        </li>
+    {% endfor %}
+</ol>
+{% endblock %} <!-- ending the block that gets inserted into base.html-->

@@ -1,0 +1,15 @@
+{% extends "base.html" %} <!-- This line includes this html into the base template -->
+{% block content %} <!-- starting the block to insert into base.html -->
+<hr>
+{% for post in posts %}
+    <div class="blogpost">
+        {% set id = post.key().id() %}
+        {{ id }}
+        {% set link = "/blog/" ~ id %}
+        <a href={{link}}><div class="blogpost-subject">{{post.subject}}</div></a>
+
+        <pre class="blogpost-content">{{post.content}}</pre> <!-- "<pre> preserves the formatting of whatever is between the tags" -->
+    </div>
+{% endfor %}
+
+{% endblock %} <!-- ending the block that gets inserted into base.html-->
