@@ -22,8 +22,12 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
-
-
+def get_posts(lim, off):
+    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5 OFFSET 5")
+    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC limit lim offset off")
+    #return posts
+    query = BlogPost.all().order('-created')
+    return query.fetch(limit=lim, offset=off)
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -43,9 +47,24 @@ class BlogPost(db.Model):
     last_modified = db.DateTimeProperty(auto_now = True)
 
 class MainHandler(Handler):
-    def render_bloghome(self, subject="", content="", error="", posts=""):
-        posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
-        self.render("bloghome.html", subject=subject, content = content, error=error, posts=posts)
+    def render_bloghome(self, subject="", content="", error="", posts="", next_page="", prev_page=""):
+        page = self.request.get("page")
+        page_limit = 5
+        offset = 0
+        page = page and int(page)
+        if page:
+            offset = (page-1)*page_limit
+        else:
+            page = 1
+        posts = get_posts(int(page_limit), int(offset))
+        prev_page = None
+        next_page = None
+        if page > 1:
+            prev_page= page-1
+        if len(posts) == page_limit and BlogPost.all().count() > offset+page_limit:
+            next_page = page + 1
+
+        self.render("bloghome.html", subject=subject, content = content, error=error, posts=posts, next_page=next_page, prev_page=prev_page)
 
     def get(self):
         self.render_bloghome()
