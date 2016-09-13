@@ -4,9 +4,9 @@
 {% for post in posts %}
     <div class="blogpost">
         {% set id = post.key().id() %}
-        {{ id }}
         {% set link = "/blog/" ~ id %}
         <a href={{link}}><div class="blogpost-subject">{{post.subject}}</div></a>
+        {{post.created.strftime("%b %d, %Y")}}
 
         <pre class="blogpost-content">{{post.content}}</pre> <!-- "<pre> preserves the formatting of whatever is between the tags" -->
     </div>
