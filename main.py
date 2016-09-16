@@ -24,9 +24,11 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), a
 
 def get_posts(lim, off):
     #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5 OFFSET 5")
-    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC limit lim offset off")
+
+    #posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC limit :lim offset :off" , lim = lim, off = off)
     #return posts
-    query = BlogPost.all().order('-created')
+
+    query = BlogPost.all().order('-created')  #THis is a bad way to do it when the DB is large...
     return query.fetch(limit=lim, offset=off)
 
 class Handler(webapp2.RequestHandler):
@@ -76,9 +78,8 @@ class BlogHandler(Handler):
 
 
 class NewPostHandler(Handler):
-    def render_blogpost(self, subject="", content="", error="", posts=""):
-        posts = db.GqlQuery("SELECT * FROM BlogPost ORDER BY created DESC LIMIT 5")
-        self.render("blogpost.html", subject=subject, content = content, error=error, posts=posts)
+    def render_blogpost(self, subject="", content="", error=""):
+        self.render("blogpost.html", subject=subject, content = content, error=error)
 
     def get(self):
         self.render_blogpost()

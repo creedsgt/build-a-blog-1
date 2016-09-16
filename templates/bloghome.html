@@ -5,6 +5,7 @@
     <div class="blogpost">
         {% set id = post.key().id() %}
         {% set link = "/blog/" ~ id %}
+        <!-- /blog/{{ post.key().id() }} -->
         <a href={{link}}><div class="blogpost-subject">{{post.subject}}</div></a>
         {{post.created.strftime("%b %d, %Y")}}
 
